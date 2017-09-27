@@ -11,22 +11,40 @@
 
 void main()
 {
-  TMatrix<int> a(5), b(5), c(5);
-  int i, j;
+	try
+	{
+		TMatrix<int> a(5), b(5), c(5);
+		int i, j;
 
-  setlocale(LC_ALL, "Russian");
-  cout << "Тестирование программ поддержки представления треугольных матриц"
-    << endl;
-  for (i = 0; i < 5; i++)
-    for (j = i; j < 5; j++ )
-    {
-      a[i][j] =  i * 10 + j;
-      b[i][j] = (i * 10 + j) * 100;
-    }
-  c = a + b;
-  cout << "Matrix a = " << endl << a << endl;
-  cout << "Matrix b = " << endl << b << endl;
-  cout << "Matrix c = a + b" << endl << c << endl;
-  cout << c[3][3];
+		setlocale(LC_ALL, "Russian");
+		cout << "Тестирование программ поддержки представления треугольных матриц"
+			<< endl;
+		for (i = 0; i < 5; i++)
+			for (j = i; j < 5; j++)
+			{
+				a[i][j] = i * 10 + j;
+				b[i][j] = (i * 10 + j) * 100;
+			}
+		c = a + b;
+		cout << "Matrix a = " << endl << a << endl;
+		cout << "Matrix b = " << endl << b << endl;
+		cout << "Matrix c = a + b" << endl << c << endl;
+		cout << c[3][3];
+		TMatrix<int> d(-5), e(5);
+		for (i = 0; i < 5; i++)
+			for (j = i; j < 5; j++)
+			{
+				d[i][j] = i * 10 + j;
+
+			}
+	}
+	catch (invalid_argument& e)
+	{
+		cout << e.what() << endl;
+	}
+	catch (logic_error& e)
+	{
+		cout << e.what() << endl;
+	}
 }
 //---------------------------------------------------------------------------

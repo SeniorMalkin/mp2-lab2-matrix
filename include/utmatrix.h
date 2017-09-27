@@ -9,7 +9,7 @@
 #define __TMATRIX_H__
 
 #include <iostream>
-
+#include <stdexcept>
 using namespace std;
 
 const int MAX_VECTOR_SIZE = 100000000;
@@ -64,6 +64,8 @@ template <class ValType>
 TVector<ValType>::TVector(int s, int si)
 {
 	//исключения для неправильных аргументов
+	if ((s <= 0) || (si < 0) || (si > s))
+		throw invalid_argument("Trying to create incorrect vector");
 	Size = s;
 	pVector = new ValType[Size];
 	for (int i = 0; i < Size; i++)
@@ -90,6 +92,8 @@ TVector<ValType>::~TVector()
 template <class ValType> // доступ
 ValType& TVector<ValType>::operator[](int pos)
 {
+	if (pos >= Size || pos < 0)
+		throw invalid_argument("Invalid index for array");
 	//исключение для неправильного аргумента
 	return pVector[pos-StartIndex];
 } /*-------------------------------------------------------------------------*/
@@ -99,11 +103,11 @@ bool TVector<ValType>::operator==(const TVector &v) const
 {
 	//векторы разных размеров
 	int f = 0;
-	if (Size != v.GetSize())
-		return false;
+	if (Size != v.Size)
+		throw logic_error("Vectors have different sizes");
 	else
 	{
-		for (int i = 0; i < size; i++)
+		for (int i = 0; i < Size; i++)
 		{
 			if (pVector[i] != v.pVector[i])
 				f = 1;
@@ -119,11 +123,11 @@ bool TVector<ValType>::operator!=(const TVector &v) const
 {
 	//векторы разных размеров
 	int f = 0;
-	if (Size != v.GetSize())
-		return true;
+    if (Size != v.Size)
+		throw logic_error("Vectors have different sizes");
 	else
 	{
-		for (int i = 0; i < size; i++)
+		for (int i = 0; i < Size; i++)
 		{
 			if (pVector[i] != v.pVector[i])
 				f = 1;
@@ -178,6 +182,8 @@ template <class ValType> // сложение
 TVector<ValType> TVector<ValType>::operator+(const TVector<ValType> &v)
 {
 	//векторы разных размеров
+	if (Size != v.Size)
+		throw logic_error("Vectors have different sizes");
 	TVector<ValType> result(GetSize(), GetStartIndex());
 	for (int i = 0; i < Size; i++)
 		result.pVector[i] = pVector[i] + v.pVector[i];
@@ -188,6 +194,8 @@ template <class ValType> // вычитание
 TVector<ValType> TVector<ValType>::operator-(const TVector<ValType> &v)
 {
 	//векторы разных размеров
+	if (Size != v.Size)
+		throw logic_error("Vectors have different sizes");
 	TVector<ValType> result(GetSize(), GetStartIndex());
 	for (int i = 0; i < Size; i++)
 		result.pVector[i] = pVector[i] - v.pVector[i];
@@ -198,6 +206,8 @@ template <class ValType> // скалярное произведение
 ValType TVector<ValType>::operator*(const TVector<ValType> &v)
 {
 	//векторы разных размеров
+	if (Size != v.Size)
+		throw logic_error("Vectors have different sizes");
 	TVector<ValType> result(GetSize(), GetStartIndex());
 	for (i = 0; i < Size; i++)
 		result.pVector[i] = pVector[i]*v.pVector[i];
@@ -278,7 +288,9 @@ template <class ValType> // сравнение
 bool TMatrix<ValType>::operator==(const TMatrix<ValType> &mt) const
 {
 	//векторы разных размеров
-	f = 0;
+	if (Size != mt.Size)
+		throw logic_error("Vectors have different sizes");
+	int f = 0;
 	for (int i = 0; i < Size; i++)
 		if (pVector[i] != mt.pVector[i])
 			f = 1;
@@ -291,7 +303,9 @@ template <class ValType> // сравнение
 bool TMatrix<ValType>::operator!=(const TMatrix<ValType> &mt) const
 {
 	//векторы разных размеров
-	f = 0;
+	if (Size != mt.Size)
+		throw logic_error("Vectors have different sizes");
+	int f = 0;
 	for (int i = 0; i < Size; i++)
 		if (pVector[i] != mt.pVector[i])
 			f = 1;
