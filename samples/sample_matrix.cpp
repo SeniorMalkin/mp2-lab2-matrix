@@ -30,13 +30,14 @@ void main()
 		cout << "Matrix b = " << endl << b << endl;
 		cout << "Matrix c = a + b" << endl << c << endl;
 		cout << c[3][3];
-		TMatrix<int> d(-5), e(5);
-		for (i = 0; i < 5; i++)
-			for (j = i; j < 5; j++)
+		TMatrix<int> d(3), e(5);
+		for (i = 0; i < 3; i++)
+			for (j = i; j < 3; j++)
 			{
 				d[i][j] = i * 10 + j;
 
 			}
+		e = d + a;
 	}
 	catch (invalid_argument& e)
 	{

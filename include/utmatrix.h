@@ -64,7 +64,7 @@ template <class ValType>
 TVector<ValType>::TVector(int s, int si)
 {
 	//исключения для неправильных аргументов
-	if ((s <= 0) || (si < 0) || (si > s))
+	if ((s < 0) || (si < 0))
 		throw invalid_argument("Trying to create incorrect vector");
 	Size = s;
 	pVector = new ValType[Size];
@@ -92,7 +92,7 @@ TVector<ValType>::~TVector()
 template <class ValType> // доступ
 ValType& TVector<ValType>::operator[](int pos)
 {
-	if (pos >= Size || pos < 0)
+	if ((pos-StartIndex) >= Size || pos < 0)
 		throw invalid_argument("Invalid index for array");
 	//исключение для неправильного аргумента
 	return pVector[pos-StartIndex];
