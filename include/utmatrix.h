@@ -64,7 +64,7 @@ template <class ValType>
 TVector<ValType>::TVector(int s, int si)
 {
 	//исключения для неправильных аргументов
-	if ((s < 0) || (si < 0))
+	if ((s > MAX_VECTOR_SIZE)|| (s < 0) || (si < 0))
 		throw invalid_argument("Trying to create incorrect vector");
 	Size = s;
 	pVector = new ValType[Size];
@@ -104,7 +104,8 @@ bool TVector<ValType>::operator==(const TVector &v) const
 	//векторы разных размеров
 	int f = 0;
 	if (Size != v.Size)
-		throw logic_error("Vectors have different sizes");
+		return false;
+		//throw logic_error("Vectors have different sizes");
 	else
 	{
 		for (int i = 0; i < Size; i++)
@@ -123,8 +124,9 @@ bool TVector<ValType>::operator!=(const TVector &v) const
 {
 	//векторы разных размеров
 	int f = 0;
-    if (Size != v.Size)
-		throw logic_error("Vectors have different sizes");
+	if (Size != v.Size)
+		return false;
+		//throw logic_error("Vectors have different sizes");
 	else
 	{
 		for (int i = 0; i < Size; i++)
@@ -141,6 +143,8 @@ bool TVector<ValType>::operator!=(const TVector &v) const
 template <class ValType> // присваивание
 TVector<ValType>& TVector<ValType>::operator=(const TVector &v)
 {
+	if (this == &v)
+		return *this;
 	Size = v.Size;
 	StartIndex = v.StartIndex;
 	delete[] pVector;
@@ -155,7 +159,7 @@ template <class ValType> // прибавить скаляр
 TVector<ValType> TVector<ValType>::operator+(const ValType &val)
 {
 	TVector<ValType> result(GetSize(), GetStartIndex());
-	for (i = 0; i < Size; i++)
+	for (int i = 0; i < Size; i++)
 		result.pVector[i] = pVector[i] + val;
 	return result;
 } /*-------------------------------------------------------------------------*/
@@ -164,7 +168,7 @@ template <class ValType> // вычесть скаляр
 TVector<ValType> TVector<ValType>::operator-(const ValType &val)
 {
 	TVector<ValType> result(GetSize(), GetStartIndex());
-	for (i = 0; i < Size; i++)
+	for (int i = 0; i < Size; i++)
 		result.pVector[i] = pVector[i] - val;
 	return result;
 } /*-------------------------------------------------------------------------*/
@@ -173,7 +177,7 @@ template <class ValType> // умножить на скаляр
 TVector<ValType> TVector<ValType>::operator*(const ValType &val)
 {
 	TVector<ValType> result(GetSize(), GetStartIndex());
-	for (i = 0; i < Size; i++)
+	for (int i = 0; i < Size; i++)
 		result.pVector[i] = pVector[i]*val;
 	return result;
 } /*-------------------------------------------------------------------------*/
@@ -208,16 +212,16 @@ ValType TVector<ValType>::operator*(const TVector<ValType> &v)
 	//векторы разных размеров
 	if (Size != v.Size)
 		throw logic_error("Vectors have different sizes");
-	TVector<ValType> result(GetSize(), GetStartIndex());
-	for (i = 0; i < Size; i++)
-		result.pVector[i] = pVector[i]*v.pVector[i];
+	ValType result=0;
+	for (int i = 0; i < Size; i++)
+		result += pVector[i]*v.pVector[i];
 	return result;
 } /*-------------------------------------------------------------------------*/
 template <class ValType>
 void TVector<ValType>::Resize(int s)
 {
 	TVector<ValType> buf(GetSize(), GetStartIndex());
-	for (i = 0; i < Size; i++)
+	for (int i = 0; i < Size; i++)
 		buf.pVector[i] = pVector[i];
 	delete[] pVector;
 	pVector = new TVector<ValType>(s, StartIndex);
@@ -267,7 +271,8 @@ public:
 template <class ValType>
 TMatrix<ValType>::TMatrix(int s) : TVector<TVector<ValType> >(s)
 {
-
+	if((s > MAX_MATRIX_SIZE) || (s<0))
+		throw invalid_argument("Trying to create incorrect matrix");
 	for (int i = 0; i < s; i++)
 	{
 		TVector<ValType> tmp(s - i, i);
@@ -289,7 +294,8 @@ bool TMatrix<ValType>::operator==(const TMatrix<ValType> &mt) const
 {
 	//векторы разных размеров
 	if (Size != mt.Size)
-		throw logic_error("Vectors have different sizes");
+		return false;
+		//throw logic_error("Vectors have different sizes");
 	int f = 0;
 	for (int i = 0; i < Size; i++)
 		if (pVector[i] != mt.pVector[i])
@@ -304,7 +310,8 @@ bool TMatrix<ValType>::operator!=(const TMatrix<ValType> &mt) const
 {
 	//векторы разных размеров
 	if (Size != mt.Size)
-		throw logic_error("Vectors have different sizes");
+		return false;
+		//throw logic_error("Vectors have different sizes");
 	int f = 0;
 	for (int i = 0; i < Size; i++)
 		if (pVector[i] != mt.pVector[i])

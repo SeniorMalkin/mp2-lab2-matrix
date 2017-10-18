@@ -37,7 +37,7 @@ void main()
 				d[i][j] = i * 10 + j;
 
 			}
-		e = d + a;
+		//e = d + a;
 	}
 	catch (invalid_argument& e)
 	{
